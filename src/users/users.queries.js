@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/user.model').userModel;
 
 module.exports = {
@@ -14,7 +15,10 @@ module.exports = {
         return {status:400, payload: 'Email adress is already in use.'};
       }
       const newUser = new User({...user});
+      const salt = await bcrypt.genSalt(10);
+      newUser.password = await bcrypt.hash(newUser.password, salt);
       await newUser.save();
+      delete newUser._doc.password;
       console.log('User created...');
       return {status: 201, payload: newUser};
     } catch(err) {
@@ -22,17 +26,22 @@ module.exports = {
       return {status: 500, payload: 'Server error.'};
     }
   },
-  read: async (query) => {
+  auth: async (auth) => {
     try {
-      const result = await User.findOne({username: query.username, password: query.password});
+      const result = await User.findOne().or([{username: auth.user}, {email: auth.user}]);
       if (!result) {
         console.log('User does not exist...');
-        return {status: 404, payload: 'Login failed. User does not exist'};
+        return {status: 400, payload: 'Username/email or password are invalid'};
       }
-      console.log('Login success...');
+      const isValid = await bcrypt.compare(auth.password, result.password);
+      if (!isValid) {
+        console.log('Incorrect password...');
+        return {status: 400, payload: 'Username/email or password are invalid'};
+      }
+      console.log('Successfull authentification...');
       return {status: 200, payload: result};
     } catch(err) {
-      console.log('Login failed...', err);
+      console.log('Authentification failed...', err);
       return {status: 500, payload: 'Server error'};
     }
   },
