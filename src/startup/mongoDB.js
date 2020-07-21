@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('../startup/logger');
 
 const initDB = async () => {
  try {
@@ -7,9 +8,9 @@ const initDB = async () => {
       'mongodb://localhost:27017/demo',
       {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}
     );
-   console.log('Connected to DB');
+   logger.info('Connected to DB');
  } catch(err) {
-   console.log(new Error(err));
+   logger.error('Failed to conect to DB\n', new Error(err));
  }
 }
 

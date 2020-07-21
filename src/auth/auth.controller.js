@@ -1,6 +1,4 @@
 const userQueries = require('../users/users.queries');
-const jwt = require('jsonwebtoken');
-const { jwtPrivateKey } = require('../../config');
 
 module.exports = {
   login: async (req, res) => {

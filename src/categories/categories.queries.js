@@ -33,10 +33,6 @@ module.exports = {
       console.log('Category read...');
       return {status:200, payload: result}
     } catch(err) {
-      if (err instanceof mongoose.Error.CastError) {
-        console.log('Invalid category id format...\n', err);
-        return {status: 400, payload: 'Category does not exist'};
-      }
       console.log('Failed to read category...\n', err);
       return {status: 500, payload: 'Internal server error'};
     }
@@ -52,10 +48,6 @@ module.exports = {
       console.log('Category updated...');
       return {status: 200, payload: result};
     } catch(err) {
-      if (err instanceof mongoose.Error.CastError) {
-        console.log('Invalid category Id format...\n', err);
-        return { status: 404, payload: 'Failed to remove category. It does not exist.'};
-      }
       console.log('Failed to update category...\n', err);
       return {status: 500, payload: 'Internal server error'};
     }
@@ -70,10 +62,6 @@ module.exports = {
       console.log('Removed category...');
       return {status: 200, payload: result};
     } catch(err) {
-      if (err instanceof mongoose.Error.CastError) {
-        console.log('Invalid category Id format...\n', err);
-        return { status: 404, payload: 'Failed to remove category. It does not exist.'};
-      }
       console.log('Failed to delete category...\n', err);
       return {status: 500, payload: 'Internal server error'};
     }

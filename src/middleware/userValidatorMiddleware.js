@@ -11,6 +11,7 @@ const userSchema = Joi.object({
   email: Joi.string().required().email(),
   firstName: Joi.string().min(3).max(50).required(),
   lastName: Joi.string().min(3).max(50).required(),
+  isAdmin: Joi.boolean().required()
 });
 
 module.exports = (req, res, next) => {

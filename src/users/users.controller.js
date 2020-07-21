@@ -4,10 +4,8 @@ const formatResponse = require('../middleware/idTransformer');
 module.exports = {
   createUser: async (req, res) => {
     result = await userQueries.create(req.body);
-    res
-      .header('x-auth-token', result.payload.generateAuthToken())
-      .status(result.status)
-      .send(formatResponse(result.payload))
+    if (result.status === 201) res.header('x-auth-token', result.payload.generateAuthToken())
+    res.status(result.status).send(formatResponse(result.payload))
   },
   checkUser: async (req, res) => {
     result = await userQueries.checkUsername(req.query.username);
